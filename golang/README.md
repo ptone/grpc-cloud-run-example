@@ -304,7 +304,7 @@ There's a simple Golang client too:
 
 ```bash
 go run github.com/grpc-ecosystem/grpc-cloud-run-example/golang/client \
---gprc_endpoint=${ENDPOINT}:443
+--grpc_endpoint=${ENDPOINT}:443
 ```
 
 You have an auto-scaling gRPC-based calculator service!

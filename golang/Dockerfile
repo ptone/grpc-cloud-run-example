@@ -1,4 +1,4 @@
-FROM golang@sha256:205d5cf61216a16da4431dd5796793c650236159fa04e055459940ddc4c6389c as build
+FROM golang:1.16 as build
 
 WORKDIR /srv/grpc
 
@@ -7,7 +7,7 @@ COPY protos/calculator.proto ./protos/
 COPY server/*.go ./server/
 
 # Installs protoc and protoc-gen-go plugin
-ARG VERS="3.11.4"
+ARG VERS="3.19.1"
 ARG ARCH="linux-x86_64"
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v${VERS}/protoc-${VERS}-${ARCH}.zip \
     --output-document=./protoc-${VERS}-${ARCH}.zip && \
@@ -23,9 +23,11 @@ RUN protoc \
     --go_out=plugins=grpc:. \
     ./protos/calculator.proto
 
+# RUN go mod tidy
 # Build static binary
 RUN CGO_ENABLED=0 GOOS=linux \
     go build -a -installsuffix cgo \
+    -mod=mod \
     -o /go/bin/server \
     github.com/grpc-ecosystem/grpc-cloud-run-example/golang/server
 
